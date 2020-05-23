@@ -1,6 +1,4 @@
-../bin/abcm2ps -X $1
+../bin/abcm2ps -F mandolin.fmt -T7 -X $1
 ../bin/abc2midi $1
 
-open Out.xhtml &
-
-
+#open Out.xhtml &

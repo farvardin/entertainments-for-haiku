@@ -1,0 +1,151 @@
+% This definition of mandolin tablature is derived from one provided
+% by Jon Freeman at http://www.jonbanjo.com/temp/fmt.zip (see the discussion
+% at https://thesession.org/discussions/40837).
+%
+% This version was created by Jon Warbrick <jon.warbrick@googlemail.com>
+%
+% Define a tablature using the routines with something like
+%      tablature #1 pitch=G, 28 0 55 m_head m_note
+%
+% (FTI, various aliased operators (e.g. !, M, T) are provided by abcm2ps)
+
+beginps
+
+/m_width 689.6 def
+
+/m_head {                                        % pitch m_head
+    pop
+    /Helvetica 8 selectfont
+    0 5 M 90 rotate (MANDOLIN) show -90 rotate
+    m_lines
+    newpath
+} !
+
+/m_lines {
+    10 10 40 {
+        dup 15 exch M m_width exch lineto
+    } for stroke
+    /Helvetica-Bold 9 selectfont
+    13 7 M 90 rotate (G) show -90 rotate
+    13 17 M 90 rotate (D) show -90 rotate
+    13 27 M 90 rotate (A) show -90 rotate
+    13 37 M 90 rotate (E) show -90 rotate
+} !
+
+% show a string horizontally and vertically centred at current location
+% (inspired by https://stackoverflow.com/questions/3618194/how-to-determine-string-height-in-postscript)
+
+/m_ccshoww {                                      % str m_ccshow
+    dup
+    gsave
+    newpath
+    0 0 M
+    true charpath flattenpath
+    pathbbox
+    grestore
+    3 -1 roll sub 2 div neg
+    3 1 roll sub 2 div exch
+    rmoveto
+    show
+} !
+
+/m_ccshow {                                      % str m_ccshow
+    dup
+    gsave
+    newpath
+    0 0 M
+    true charpath flattenpath
+    pathbbox
+    grestore
+    3 -1 roll sub 2 div neg
+    3 1 roll sub 2 div exch
+    rmoveto
+    show
+} !
+
+/m_fretw{                                         % fret string m_fret
+    /Helvetica-Bold 16 selectfont
+0.5 setlinewidth
+0.8 setgray
+  10.24 mul 0 exch M
+	2 string cvs m_ccshoww
+
+} !
+
+/m_fret{  
+                                       % fret string m_fret
+/Helvetica 16 selectfont
+0.3 setgray
+    10.35 mul 0 exch M
+    2 string cvs m_ccshow
+} !
+
+/m_nofret{
+    /Helvetica 16 selectfont
+    0 25 M (X) m_ccshow
+} !
+
+
+/m_notew{                                         % octave pitch x-offset m_notew
+    gsave
+    0 T
+    /jf_note exch def
+    /jf_oct exch def
+    jf_oct 0 ge {
+        jf_note 7 lt {
+            jf_note 1 m_fretw
+        }{
+            jf_note 14 lt {
+                jf_note 7 sub 2 m_fretw
+            }{
+                jf_note 21 lt {
+                    jf_note 14 sub 3 m_fretw
+                }{
+                    jf_oct 0 eq {
+                        jf_note 21 sub
+                    }{
+                        jf_note 9 sub
+                    } ifelse
+                    4 m_fretw
+                } ifelse
+            } ifelse
+        } ifelse
+    }{
+        m_nofret
+    } ifelse
+    grestore
+} !
+
+/m_note{                                         % octave pitch x-offset m_note
+    gsave
+    0 T
+    /jf_note exch def
+    /jf_oct exch def
+    jf_oct 0 ge {
+        jf_note 7 lt {
+	    jf_note 1 m_fret
+        }{
+            jf_note 14 lt {
+		jf_note 7 sub 2 m_fret
+            }{
+                jf_note 21 lt {
+			jf_note 14 sub 3 m_fret
+                }{
+                    jf_oct 0 eq {
+                        jf_note 21 sub
+                    }{
+                        jf_note 9 sub
+                    } ifelse
+			4 m_fret
+                } ifelse
+            } ifelse
+        } ifelse
+    }{
+        m_nofret
+    } ifelse
+    grestore
+} !
+
+endps
+
+tablature #7 pitch=G, 28 0 55 m_head m_note
